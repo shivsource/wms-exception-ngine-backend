@@ -1,0 +1,376 @@
+{
+  "info": {
+    "name": "WMS Exception Engine Backend",
+    "description": "API collection for the WMS Exception Engine backend: exception detection/lifecycle, root-cause analysis, recommendations, and the Action Engine (propose/approve/execute/outcome).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "wms-exception-engine-backend-collection"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:6000", "type": "string" },
+    { "key": "exceptionId", "value": "1", "type": "string" },
+    { "key": "actionId", "value": "1", "type": "string" },
+    { "key": "predictionId", "value": "1", "type": "string" },
+    { "key": "orderId", "value": "ORD-100149", "type": "string", "description": "Known real order, already deeply overdue in the seed data — good for CONFIRMED/HIGH demos" },
+    { "key": "taskId", "value": "PICK-500026", "type": "string", "description": "Known real picking task, long past its baseline duration — good for a HIGH/CRITICAL picking-delay demo" },
+    { "key": "sku", "value": "SKU-1001", "type": "string", "description": "Known real SKU with healthy stock and no open shortage — good for a LOW-risk demo" }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Get Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["health"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Exceptions",
+      "item": [
+        {
+          "name": "List Exceptions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/exceptions?status=OPEN&severity=HIGH&type=PICKING_DELAY&limit=50&offset=0",
+              "host": ["{{baseUrl}}"],
+              "path": ["exceptions"],
+              "query": [
+                { "key": "status", "value": "OPEN", "description": "OPEN | ACKNOWLEDGED | IN_PROGRESS | RESOLVED | IGNORED", "disabled": false },
+                { "key": "severity", "value": "HIGH", "description": "LOW | MEDIUM | HIGH | CRITICAL", "disabled": false },
+                { "key": "type", "value": "PICKING_DELAY", "description": "INVENTORY_SHORTAGE | INVENTORY_DISCREPANCY | PICKING_DELAY | PICKING_ERROR | EXCESSIVE_PICKING_TIME | EXCESSIVE_PICKER_DISTANCE | SLA_AT_RISK | PACKING_DELAY | DISPATCH_DELAY | HIGH_RETURN_RATE", "disabled": false },
+                { "key": "limit", "value": "50", "disabled": false },
+                { "key": "offset", "value": "0", "disabled": false }
+              ]
+            }
+          }
+        },
+        {
+          "name": "List Open Exceptions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/exceptions/open",
+              "host": ["{{baseUrl}}"],
+              "path": ["exceptions", "open"]
+            }
+          }
+        },
+        {
+          "name": "List Critical Exceptions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/exceptions/critical",
+              "host": ["{{baseUrl}}"],
+              "path": ["exceptions", "critical"]
+            }
+          }
+        },
+        {
+          "name": "Run Exception Engine",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/exceptions/run",
+              "host": ["{{baseUrl}}"],
+              "path": ["exceptions", "run"]
+            }
+          }
+        },
+        {
+          "name": "Get Exception By Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/exceptions/{{exceptionId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["exceptions", "{{exceptionId}}"]
+            }
+          }
+        },
+        {
+          "name": "Get Exception Evidence",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/exceptions/{{exceptionId}}/evidence",
+              "host": ["{{baseUrl}}"],
+              "path": ["exceptions", "{{exceptionId}}", "evidence"]
+            }
+          }
+        },
+        {
+          "name": "Get Exception Root Cause",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/exceptions/{{exceptionId}}/root-cause",
+              "host": ["{{baseUrl}}"],
+              "path": ["exceptions", "{{exceptionId}}", "root-cause"]
+            }
+          }
+        },
+        {
+          "name": "Create Exception Root Cause Analysis",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/exceptions/{{exceptionId}}/root-cause",
+              "host": ["{{baseUrl}}"],
+              "path": ["exceptions", "{{exceptionId}}", "root-cause"]
+            }
+          }
+        },
+        {
+          "name": "Get Exception Recommendation",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/exceptions/{{exceptionId}}/recommendation",
+              "host": ["{{baseUrl}}"],
+              "path": ["exceptions", "{{exceptionId}}", "recommendation"]
+            }
+          }
+        },
+        {
+          "name": "Create Exception Recommendation",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/exceptions/{{exceptionId}}/recommendation",
+              "host": ["{{baseUrl}}"],
+              "path": ["exceptions", "{{exceptionId}}", "recommendation"]
+            }
+          }
+        },
+        {
+          "name": "Get Exception Actions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/exceptions/{{exceptionId}}/actions",
+              "host": ["{{baseUrl}}"],
+              "path": ["exceptions", "{{exceptionId}}", "actions"]
+            }
+          }
+        },
+        {
+          "name": "Resolve Exception",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/exceptions/{{exceptionId}}/resolve",
+              "host": ["{{baseUrl}}"],
+              "path": ["exceptions", "{{exceptionId}}", "resolve"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Predictions",
+      "item": [
+        {
+          "name": "Run Prediction Engine (bulk evaluate)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/predictions/evaluate",
+              "host": ["{{baseUrl}}"],
+              "path": ["predictions", "evaluate"]
+            },
+            "description": "Evaluates every candidate order/task/product against all 4 predictors, persists idempotently (create-or-update), and resolves predictions whose entity no longer qualifies. Safe to call repeatedly."
+          }
+        },
+        {
+          "name": "Evaluate Order (SLA breach + dispatch delay risk)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/predictions/evaluate/ORDER/{{orderId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["predictions", "evaluate", "ORDER", "{{orderId}}"]
+            },
+            "description": "Runs every predictor registered for ORDER (SlaBreachPredictor, DispatchDelayPredictor) against one specific order. Returns score, signals, explanation, prediction window, existing open exceptions, and whether the prediction was suppressed as CONFIRMED."
+          }
+        },
+        {
+          "name": "Evaluate Picking Task (picking delay risk)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/predictions/evaluate/PICKING_TASK/{{taskId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["predictions", "evaluate", "PICKING_TASK", "{{taskId}}"]
+            }
+          }
+        },
+        {
+          "name": "Evaluate Product (inventory shortage risk)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/predictions/evaluate/PRODUCT/{{sku}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["predictions", "evaluate", "PRODUCT", "{{sku}}"]
+            }
+          }
+        },
+        {
+          "name": "Evaluate Nonexistent Entity (INSUFFICIENT_DATA demo)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/predictions/evaluate/ORDER/ORD-DOES-NOT-EXIST",
+              "host": ["{{baseUrl}}"],
+              "path": ["predictions", "evaluate", "ORDER", "ORD-DOES-NOT-EXIST"]
+            },
+            "description": "Demonstrates the never-fabricate-a-score rule: riskScore is null and status is INSUFFICIENT_DATA, not a made-up 0."
+          }
+        },
+        {
+          "name": "List Predictions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/predictions?status=ACTIVE&riskLevel=CRITICAL&predictionType=PICKING_DELAY_RISK&entityType=PICKING_TASK&limit=50&offset=0",
+              "host": ["{{baseUrl}}"],
+              "path": ["predictions"],
+              "query": [
+                { "key": "status", "value": "ACTIVE", "description": "ACTIVE | CONFIRMED | RESOLVED", "disabled": false },
+                { "key": "riskLevel", "value": "CRITICAL", "description": "LOW | MEDIUM | HIGH | CRITICAL | UNKNOWN", "disabled": false },
+                { "key": "predictionType", "value": "PICKING_DELAY_RISK", "description": "SLA_BREACH_RISK | PICKING_DELAY_RISK | INVENTORY_SHORTAGE_RISK | DISPATCH_DELAY_RISK", "disabled": false },
+                { "key": "entityType", "value": "PICKING_TASK", "description": "ORDER | PICKING_TASK | PRODUCT | ...", "disabled": false },
+                { "key": "limit", "value": "50", "disabled": false },
+                { "key": "offset", "value": "0", "disabled": false }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Prediction By Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/predictions/{{predictionId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["predictions", "{{predictionId}}"]
+            }
+          }
+        },
+        {
+          "name": "Get Predictions For Entity (aggregated overall risk)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/predictions/entity/{{orderId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["predictions", "entity", "{{orderId}}"]
+            },
+            "description": "Every persisted prediction (any type/status) for this entity, plus overallRisk = the highest score among its currently ACTIVE/CONFIRMED predictions."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Actions",
+      "item": [
+        {
+          "name": "Create Action From Exception",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"exceptionId\": {{exceptionId}}\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/actions",
+              "host": ["{{baseUrl}}"],
+              "path": ["actions"]
+            }
+          }
+        },
+        {
+          "name": "Get Action By Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/actions/{{actionId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["actions", "{{actionId}}"]
+            }
+          }
+        },
+        {
+          "name": "Approve Action",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/actions/{{actionId}}/approve",
+              "host": ["{{baseUrl}}"],
+              "path": ["actions", "{{actionId}}", "approve"]
+            }
+          }
+        },
+        {
+          "name": "Execute Action",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/actions/{{actionId}}/execute",
+              "host": ["{{baseUrl}}"],
+              "path": ["actions", "{{actionId}}", "execute"]
+            }
+          }
+        },
+        {
+          "name": "Get Action Outcome",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/actions/{{actionId}}/outcome",
+              "host": ["{{baseUrl}}"],
+              "path": ["actions", "{{actionId}}", "outcome"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

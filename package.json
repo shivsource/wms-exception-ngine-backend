@@ -1,0 +1,51 @@
+{
+  "name": "wms-exception-engine-backend",
+  "version": "0.1.0",
+  "description": "AI-ready Rule-Based Exception Engine for Warehouse Management Systems",
+  "main": "dist/server.js",
+  "private": true,
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "build": "rimraf dist && tsc -p tsconfig.json",
+    "start": "node dist/server.js",
+    "lint": "eslint \"src/**/*.ts\"",
+    "lint:fix": "eslint \"src/**/*.ts\" --fix",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "migrate": "ts-node src/database/migrate.ts",
+    "db:reset": "ts-node src/database/seed/reset-entry.ts",
+    "db:seed": "ts-node src/database/seed/index.ts",
+    "simulation:validate": "ts-node src/database/seed/simulation-validate.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "prediction:validate": "vitest run src/validation --reporter=verbose",
+    "prediction:validate:live": "ts-node src/database/seed/render-live-report.ts"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "helmet": "^7.1.0",
+    "mysql2": "^3.23.2",
+    "node-cron": "^4.6.0",
+    "winston": "^3.13.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.14.9",
+    "@typescript-eslint/eslint-plugin": "^7.15.0",
+    "@typescript-eslint/parser": "^7.15.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "prettier": "^3.3.2",
+    "rimraf": "^5.0.7",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.5.3",
+    "vitest": "^2.1.9"
+  }
+}
