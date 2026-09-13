@@ -29,6 +29,11 @@ const envSchema = z.object({
    * windows to erode in real time exactly like the old dataset did once "now" moves past it.
    */
   SIMULATION_TIME: z.string().datetime().optional(),
+  /** Prototype login only (see src/controllers/auth.controller.ts) — a single hardcoded
+   *  operator credential, no users table. Required, like DATABASE_URL, rather than defaulted
+   *  in code, so the credential never appears as a literal anywhere in source. */
+  AUTH_EMAIL: z.string().min(1, 'AUTH_EMAIL is required'),
+  AUTH_PASSWORD: z.string().min(1, 'AUTH_PASSWORD is required'),
 });
 
 const parsed = envSchema.safeParse(process.env);
