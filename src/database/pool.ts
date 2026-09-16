@@ -7,9 +7,8 @@ export const pool = mysql.createPool({
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
-  // DECIMAL columns (distance_walked, unit_weight, etc.) come back as JS numbers
-  // instead of strings — required for arithmetic in rule evaluation.
   decimalNumbers: true,
+  timezone: 'Z',
 });
 
 export async function pingDatabase(): Promise<boolean> {
